@@ -1,0 +1,15 @@
+[build]
+pre-build = [
+    "dpkg --add-architecture ${CROSS_DEB_ARCH}",
+    "apt-get update",
+    "apt-get upgrade -y",
+    "apt-get install -y libssl-dev:${CROSS_DEB_ARCH}",
+]
+
+[target.aarch64-unknown-linux-gnu]
+# `latest` uses EOLed Ubuntu 16.04.
+image = "ghcr.io/cross-rs/aarch64-unknown-linux-gnu@sha256:9808d7b7563a6334042c00555e473d0e0be46a171e3426301030118807280c86"
+
+[target.x86_64-unknown-linux-gnu]
+# `latest` uses EOLed Ubuntu 16.04.
+image = "ghcr.io/cross-rs/x86_64-unknown-linux-gnu@sha256:cf091033b6c4b0416a03d181080ad45c418248a262867a623306748a2c02a3c2"
