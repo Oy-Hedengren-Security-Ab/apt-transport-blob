@@ -96,7 +96,10 @@ jobs:
   publish:
     name: Publish release artifact
     runs-on: ubuntu-latest
-    if: github.ref_type == 'tag'
+    # Conditioning based on secrets is not possible, see
+    # https://github.com/actions/runner/issues/520. Since this is a fork, we
+    # don't need to be clever about this, as we simply don't need it, ever.
+    if: 'false'
     needs:
       - build
     steps:
