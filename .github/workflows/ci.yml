@@ -43,6 +43,7 @@ jobs:
       - name: Install cross
         run: "cargo install cross \
           --git https://github.com/cross-rs/cross \
+          --locked \
           --rev 88f49ff79e777bef6d3564531636ee4d3cc2f8d2"
       - name: Build binary
         run: cross build --release --target ${{ matrix.target }}
