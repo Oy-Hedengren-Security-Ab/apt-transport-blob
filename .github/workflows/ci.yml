@@ -94,6 +94,38 @@ jobs:
             target/release/blob
             target/debian/*.deb
 
+  build-debian:
+    name: Build Debian package
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - arm64
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Necessary for determining the package version correctly.
+          fetch-depth: 0
+      - name: Set up build environment
+        run: docker compose -f compose.build.yml build buildenv
+      - name: Build the package
+        run: docker compose -f compose.build.yml run buildenv make
+          deb-build-${{ matrix.arch }}
+      - name: Lint the package
+        run: docker compose -f compose.build.yml run buildenv make
+          deb-lint-${{ matrix.arch }}
+      - name: Test package installation
+        if: ${{ matrix.arch == 'amd64' }} # The job runs on x64.
+        run: docker compose -f compose.build.yml run buildenv make
+          deb-install
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: debian-${{ matrix.arch }}
+          path: |
+            *.deb
+
   publish:
     name: Publish release artifact
     runs-on: ubuntu-latest
