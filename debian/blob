@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+# Continue supporting the old config location for now.
+if [ -e /etc/opt/apt-transport-blob/blob.env ]; then
+	# shellcheck source=/dev/null
+	source /etc/opt/apt-transport-blob/blob.env
+fi
+
+if [ -e /etc/apt-transport-blob.conf ]; then
+	# shellcheck source=/dev/null
+	source /etc/apt-transport-blob.conf
+fi
+
+export AZURE_CLIENT_ID
+export AZURE_CLIENT_SECRET
+export AZURE_TENANT_ID
+
+exec /usr/lib/apt-transport-blob "$@"

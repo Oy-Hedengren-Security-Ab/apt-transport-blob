@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eo pipefail
+
+git describe | sed \
+	-e 's/-\([0-9]*\)-g\([0-9a-f]*\)$/+git\1.\2/' \
+	-e 's/-\([0-9]*\)/+\1/' \
+	-e 's/-/./g'
