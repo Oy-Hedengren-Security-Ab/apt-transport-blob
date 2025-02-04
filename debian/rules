@@ -28,7 +28,7 @@ execute_before_dh_auto_configure:
 
 execute_after_dh_auto_configure:
 # Restore the lock file removed by dh-cargo.
-	git checkout Cargo.lock
+	git restore Cargo.lock
 # Keep using Cargo.lock.
 	sed -i '/\[build\]/,$$!d' debian/cargo_home/config
 

@@ -16,7 +16,7 @@ RUN set -ex; \
         dh-make \
         libssl-dev:{amd64,arm64} \
         lintian \
-        # Necessary for automatic dependency resulution.
+        # Necessary for automatic dependency resolution.
         {libc6,libssl1.1}:{amd64,arm64} \
     ; \
     rm -rf /var/lib/apt/lists/*
