@@ -17,8 +17,6 @@ cargo build --release
 This creates the `blob` executable in your standard Cargo output directory,
 usually `target/release`.
 
-[`cross`] can be used for cross-compilation.
-
 ### Debian package
 
 To create the Debian package, run:
@@ -85,5 +83,3 @@ trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
-
-[`cross`]: https://lib.rs/crates/cross
