@@ -1,0 +1,2 @@
+# Removes the old binary.
+dev/null opt/apt-transport-blob/blob

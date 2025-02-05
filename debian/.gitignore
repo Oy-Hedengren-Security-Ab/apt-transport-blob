@@ -1,0 +1,9 @@
+*.log
+.debhelper
+/cargo-checksum.json
+/cargo_home
+/changelog
+/files
+/apt-transport-blob
+/apt-transport-blob.substvars
+debhelper-build-stamp

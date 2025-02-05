@@ -1,0 +1,6 @@
+dir-or-file-in-opt opt/apt-transport-blob/
+dir-or-file-in-opt opt/apt-transport-blob/blob
+executable-in-usr-lib usr/lib/apt-transport-blob
+executable-in-usr-lib usr/lib/apt/methods/blob
+extended-description-is-empty
+no-copyright-file

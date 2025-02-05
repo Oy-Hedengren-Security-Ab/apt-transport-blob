@@ -1,0 +1,9 @@
+services:
+  buildenv:
+    build:
+      context: .
+      dockerfile: build.Dockerfile
+      pull: true
+    volumes:
+      - .:/mnt:z
+    working_dir: /mnt

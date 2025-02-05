@@ -21,16 +21,11 @@ usually `target/release`.
 
 ### Debian package
 
-To create a Debian package, use `cargo deb`:
+To create the Debian package, run:
 
-```bash
-$ cargo deb
-    Finished release [optimized] target(s) in 0.43s
-/code/apt-transport-blob/target/debian/apt-transport-blob_<version>_amd64.deb
+```console
+docker compose -f compose.build.yml run --build --rm buildenv make
 ```
-
-This creates a Debian package in `target/debian`. It contains the `blob`
-executable which installs to `/usr/lib/apt/methods/blob`.
 
 ## Usage
 

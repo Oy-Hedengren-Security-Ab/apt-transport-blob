@@ -1,0 +1,20 @@
+Source: apt-transport-blob
+Section: misc
+Priority: optional
+Maintainer: Oy Hedengren Security Ab <hedengren@hedengren.fi>
+Build-Depends:
+  debhelper-compat (= 13),
+  dh-cargo,
+  git,
+Standards-Version: 4.5.1
+Homepage: https://github.com/Oy-Hedengren-Security-Ab/apt-transport-blob
+Vcs-Browser: https://github.com/Oy-Hedengren-Security-Ab/apt-transport-blob
+Vcs-Git: https://github.com/Oy-Hedengren-Security-Ab/apt-transport-blob.git
+Rules-Requires-Root: no
+
+Package: apt-transport-blob
+Architecture: any
+Depends:
+  ${misc:Depends},
+  ${shlibs:Depends},
+Description: APT transport for privately held Azure Blob Storage repositories
