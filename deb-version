@@ -2,7 +2,11 @@
 
 set -eo pipefail
 
-git describe | sed \
+# --tags is necessary to work around an issue in GitHub Actions Checkout action,
+# which removes tag annotation from the currently checked-out tag, leading to
+# incorrect version numbers. See:
+# https://github.com/actions/checkout/issues/290
+git describe --tags | sed \
 	-e 's/-\([0-9]*\)-g\([0-9a-f]*\)$/+git\1.\2/' \
 	-e 's/-\([0-9]*\)/+\1/' \
 	-e 's/-/./g'
