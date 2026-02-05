@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 use std::sync::Arc;
 
-use azure_identity::{DefaultAzureCredential, DefaultAzureCredentialBuilder};
+use azure_identity::DeveloperToolsCredential;
 use azure_storage::StorageCredentials;
 use azure_storage_blobs::{
     blob::operations::GetPropertiesResponse,
@@ -10,6 +10,8 @@ use azure_storage_blobs::{
 };
 use log::debug;
 use url::Url;
+
+use crate::azure_credential_interop::TokenCredentialInterop;
 
 #[derive(Debug)]
 pub struct AzureBlob {
@@ -55,13 +57,15 @@ impl AzureBlob {
 }
 
 pub(crate) struct AzureRegistry {
-    credential: Arc<DefaultAzureCredential>,
+    credential: Arc<TokenCredentialInterop>,
 }
 
 impl AzureRegistry {
     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
         // Get a credential for Azure
-        let credential = DefaultAzureCredentialBuilder::new().build()?;
+        let default_credential = DeveloperToolsCredential::new(None)?;
+        let credential = TokenCredentialInterop::new(default_credential);
+
         Ok(AzureRegistry {
             credential: Arc::new(credential),
         })
@@ -81,11 +85,11 @@ impl AzureRegistry {
         // storage.azure.com scope. It's prioritised over user credentials.
         let storage_credentials = match std::env::var("AZURE_STORAGE_BEARER_TOKEN") {
             Ok(token) => {
-                debug!("Using storage bearer token for accessing {}", account);
+                debug!("Using storage bearer token for accessing {account}");
                 StorageCredentials::bearer_token(token)
             }
             Err(_) => {
-                debug!("Using token credentials for accessing {}", account);
+                debug!("Using token credentials for accessing {account}");
                 StorageCredentials::token_credential(self.credential.clone())
             }
         };

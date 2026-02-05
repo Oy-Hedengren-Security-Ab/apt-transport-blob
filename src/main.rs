@@ -11,6 +11,7 @@ use log4rs::config::{Appender, Config, Root};
 use log4rs::encode::pattern::PatternEncoder;
 
 mod azure;
+mod azure_credential_interop;
 mod message;
 mod processor;
 
@@ -90,7 +91,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             break;
         }
 
-        debug!("Buffer: {:?}", buffer);
+        debug!("Buffer: {buffer:?}");
         // Write the buffer to our message buffer
         input_buffer.put(buffer.as_bytes());
 
@@ -108,15 +109,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         Err(err) => {
                             // This is an unexpected error; log a general
                             // failure then exit.
-                            error!("Error: {:?}", err);
-                            Message::send_general_failure(&format!("Error: {}", err));
+                            error!("Error: {err:?}");
+                            Message::send_general_failure(&format!("Error: {err}"));
                             return Err(err);
                         }
                     }
                 }
                 Err(err) => {
                     // Log the error
-                    info!("Error: {:?}", err);
+                    info!("Error: {err:?}");
                 }
             }
 
@@ -142,7 +143,7 @@ mod tests {
     }
 
     pub fn cover_debug(thing: &impl std::fmt::Debug) {
-        let _ = format!("{:?}", thing);
+        let _ = format!("{thing:?}");
     }
 
     pub fn cover_error(error: &impl std::error::Error) {

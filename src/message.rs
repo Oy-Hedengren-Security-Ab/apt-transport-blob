@@ -6,9 +6,8 @@ use nom::bytes::complete::take_until;
 use nom::character::complete::{char, digit1, newline, space0};
 use nom::combinator::map_res;
 use nom::multi::many0;
-use nom::IResult;
+use nom::{IResult, Parser};
 
-use log::error;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -97,10 +96,10 @@ fn key_value_pair(input: &[u8]) -> IResult<&[u8], (String, String)> {
     let mut parse_key = map_res(take_until(":"), |buf| std::str::from_utf8(buf));
     let mut parse_value = map_res(take_until("\n"), |buf| std::str::from_utf8(buf));
 
-    let (input, key) = parse_key(input)?;
+    let (input, key) = parse_key.parse(input)?;
     let (input, _) = char(':')(input)?;
     let (input, _) = space0(input)?;
-    let (input, value) = parse_value(input)?;
+    let (input, value) = parse_value.parse(input)?;
     let (input, _) = newline(input)?;
 
     let res = (key.to_string(), value.to_string());
@@ -126,7 +125,7 @@ impl Message {
         let (input, message_type) = MessageType::from_bytes(input)?;
 
         // Now take the headers; these are key-value pairs separated by a colon
-        let (input, headers) = many0(key_value_pair)(input)?;
+        let (input, headers) = many0(key_value_pair).parse(input)?;
 
         // Now take the final newline.
         let (input, _) = newline(input)?;
@@ -144,12 +143,12 @@ impl Message {
         match Message::parse(input) {
             Ok((b"", message)) => Ok(message),
             Ok((_, _)) => Err(Error::MessageTooMuchData),
-            Err(err) => Err(Error::MessageParse(format!("{}", err))),
+            Err(err) => Err(Error::MessageParse(format!("{err}"))),
         }
     }
 
     pub fn send(&self) {
-        print!("{}", self);
+        print!("{self}");
     }
 
     pub fn send_status(message: &str) {
@@ -217,7 +216,7 @@ impl Display for Message {
             self.message_type.description()
         )?;
         for (key, value) in &self.headers {
-            writeln!(f, "{}: {}", key, value)?;
+            writeln!(f, "{key}: {value}")?;
         }
         writeln!(f)?;
         Ok(())
@@ -348,7 +347,7 @@ mod tests {
             headers: vec![("Key".to_string(), "Value".to_string())],
         };
 
-        let output = format!("{}", message);
+        let output = format!("{message}");
         assert_eq!(
             output,
             "100 Capabilities\n\
@@ -365,7 +364,7 @@ mod tests {
             headers: vec![("Key".to_string(), "Value".to_string())],
         };
 
-        let output = format!("{}", message);
+        let output = format!("{message}");
         let parsed_message = Message::from_bytes(output.as_bytes())?;
         assert_eq!(parsed_message, message);
         Ok(())
